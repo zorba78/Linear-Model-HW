@@ -1,0 +1,1428 @@
+\documentclass[12pt]{article} %%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%
+%%% Blank Sweave Document
+%%%   This uses xelatex and MinionPro. Most users will need
+%%%   to comment out stuff in the 'fonts' section below.
+%%%   It should compile in regular pdflatex, if you comment
+%%%   out xltxtra and fontspec.
+%%% also, you probably need to comment out \usepackage{Sweave}
+%%%   to allow R to insert its own ugly default one.
+%%% 
+%%% mjm / 2009-11-23 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% options to change font. If you want to play with MinionPro,
+%%% come bug me sometime. --mike
+%%% LOTS OF COOL FONT INFO AT http://www.tug.dk/FontCatalogue/
+%%% NO NEED EVER TO USE COMPUTER MODERN, AN ABOMINATION
+%%% see also http://nitens.org/taraborelli/latex and
+%%% http://scripts.sil.org/XeTeX
+%\usepackage{times}
+%\usepackage{cmbright}
+%\renewcommand\sfdefault{phv}% use helvetica for sans serif
+%\renewcommand\familydefault{\sfdefault}% use sans serif by default
+%\usepackage[dvipsnames,usenames]{xcolor}
+%\usepackage[opticals,medfamily,minionint,footnotefigures]{MinionPro}
+%\usepackage[no-math]{fontspec}
+%\usepackage{xltxtra}
+
+
+
+%%%Set up bold Minion Pro math
+%\usepackage{bm}
+%\DeclareMathAlphabet\mathbf {T1} {MinionPro-OsF}{b}{n}
+%\SetMathAlphabet\mathit  {bold}{T1} {MinionPro-OsF}{b}{it}
+%\SetSymbolFont{operators}{bold}{T1} {MinionPro-OsF}{b}{n}
+%\SetSymbolFont{letters}  {bold}{OML}{MinionPro-TOsF} {b}{it}
+%\DeclareMathVersion{boldtabular}
+%\SetSymbolFont{operators}{boldtabular}{T1} {MinionPro-OsF}{b}{n}
+%\SetSymbolFont{letters}  {boldtabular}{OML}{MinionPro-TOsF}  {b}{it}
+%\SetMathAlphabet\mathit  {boldtabular}{T1} {MinionPro-OsF}{b}{it}
+%\DeclareMathAlphabet\mathebf {T1} {MinionPro-OsF}{eb}{n}
+
+%%% Hanging indents: args length, number of lines.
+%%% \begin{hangparas}{1em}{1}
+\usepackage{hanging} 
+%%% Date formatting, defn of isodate
+\usepackage{datetime}
+\renewcommand{\dateseparator}{-}
+\newdateformat{isodate}{%
+\THEYEAR\dateseparator\twodigit{\THEMONTH}\dateseparator\twodigit{\THEDAY}}
+
+%%% PDF setup -- fill in the title
+%% Alter some LaTeX defaults for better treatment of figures:
+%% This is from the first result of google: "latex dumb defaults"
+    \renewcommand{\topfraction}{0.9}	
+    \renewcommand{\bottomfraction}{0.8}	
+    %   Parameters for TEXT pages (not float pages):
+    \setcounter{topnumber}{2}
+    \setcounter{bottomnumber}{2}
+    \setcounter{totalnumber}{4}     
+    \setcounter{dbltopnumber}{2}    
+    \renewcommand{\dbltopfraction}{0.9}	
+    \renewcommand{\textfraction}{0.07}	
+    %   Parameters for FLOAT pages (not text pages):
+    \renewcommand{\floatpagefraction}{0.7}	% require fuller float pages
+	% N.B.: floatpagefraction MUST be less than topfraction !!
+    \renewcommand{\dblfloatpagefraction}{0.7}	% require fuller float pages
+
+%%% Enable the bibliography
+%%%     see  http://merkel.zoneo.net/Latex/natbib.php
+%%% 
+%%% round: use () for in-text cites (other options square, curly, angle)
+%%% sort: orders multiple citations into the sequence in which they 
+%%%       appear in the list of references;
+%%% sort&compress: as sort but in addition multiple numerical
+%%%                citations are compressed if possible (as 3-6, 15);
+%%% numbers: for numerica citations
+%%% super:   superscripted numbers as in Nature
+\usepackage[round]{natbib}
+%%% Want to change the section head of the bib??
+%\AtBeginDocument{\renewcommand\refname{LITERATURE CITED}}
+
+%%% Document layout, margins
+\usepackage{geometry} 
+\geometry{letterpaper, textwidth=6.5in, textheight=8in, marginparsep=1em}
+
+
+%%% This is how you set  line spacing globally inside []
+%%% Options are "singlespacing","onehalfspacing","doublespacing"
+%%% To change WITHIN the document (you want a section single spaced)
+%%% just drop in, where needed, \singlespacing
+%%% and then \doublespacing again when finished.
+\usepackage[doublespacing]{setspace} 
+
+%\usepackage{egameps} % See Martin Osborne's documentation!
+%\usepackage{sgame} % See Osborne
+\usepackage{hyperref} % \href{http://link.com}{link text}
+\usepackage{graphicx} % for figures of all kinds
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{upgreek}
+
+%% Caption labels bold. Always left-align, do not center short ones.
+%% Use . instead of : after label. Size option.
+\usepackage[bf,nooneline,labelsep=period,footnotesize]{caption}
+\usepackage[dvipsnames]{xcolor}
+%\usepackage{wrapfig}  % wrappable figures
+
+%%% How to treat new paragraphs: units are anything that latex
+%%% understands: in, mm, pt, cm, [em, ex (typographic units!)]
+\setlength{\parindent}{1em} % 1em  indent first line
+\setlength{\parskip}{0.5ex} % half x-height space between para
+
+%%% Working Example of how you specify shortcut macros:
+\newcommand{\ybar}{\ensuremath{\overline{y}}}
+
+%%% Other options: Options>Soft wordwrap for easy viewing
+%%% Italics and Bold: ctrl+C,F,I (C-c, C-f, C-i) for inserting italicized text. 
+%%% CFB for bold.
+%%% rm sf tt md bf up it sl sc 
+%%% Drag citations from Bibdesk
+%%% single - for intraword hyphen. Anything longer, use two -- or three ---
+
+%%% Figures. Wrapfigure at Right Left or Center.
+%%% Set bounding box size (same as figure size).
+%%% Insert your figure BEFORE the text. 
+%%% Subsequent text will wrap around the figure.
+
+%%% Normally, just use figure environment.
+%%% To insert a figure, drag the icon (without typing the command!) 
+%%% from the finder and it will insert.
+%%% Type width= or height= in the [options] before the {argument}.
+%%% Latex>Insert Envt>Figure (figure* means no number)
+%%% "Figure #." is handled by latex, not you. Just type.
+%%% To refer to a figure (or any \label) type \ref{thelabel}
+%%% in text or use Ref menu, "C-c )" emacs will do it for you.
+
+
+%%% FONTS -- REQUIRES XETEX, WHICH YOU SHOULD BE USING.
+
+% converts LaTeX specials (``quotes'' --- dashes etc.) to unicode
+%\defaultfontfeatures{Ligatures={Common}, Mapping={tex-text}} 
+%\setromanfont [BoldFont={* Bold}, ItalicFont={* Italic}]{Gentium Book Basic}
+%\setromanfont [Mapping=tex-text,Ligatures={Common},BoldFont={ElectraLH-Bold},ItalicFont={ElectraLH-CursiveOsF},BoldItalicFont={ElectraLH-BoldCursiveOsF},SmallCapsFont={ElectraLH-RegularSC}]{ElectraLH-RegularOsF}
+%\setsansfont[Mapping=tex-text,BoldFont={Delicious-Bold},ItalicFont={Delicious-Italic},SmallCapsFont={Delicious-SmallCaps}] {Delicious-Roman}
+%\setmonofont[Scale=0.8]{Monaco} 
+%\usepackage[final,expansion=true,protrusion=true,spacing=true,kerning=true]{microtype}
+
+
+%%% Section headings (not xetex-specific)
+%%% Nice hanging indents for section numbers.
+\usepackage{sectsty} 
+\usepackage[normalem]{ulem} 
+\sectionfont{\sffamily\mdseries\upshape\Large}
+\subsectionfont{\sffamily\bfseries\upshape\normalsize} 
+\subsubsectionfont{\sffamily\mdseries\upshape\normalsize} 
+%%% Hang section numbers in the left margin
+\makeatletter 
+\def\@seccntformat#1{\protect\makebox[0pt][r]{\csname 
+the#1\endcsname\quad}} 
+\renewcommand*\env@matrix[1][c]{\hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols #1}}
+\makeatother 
+%%%
+%%% Comment this out if you want to use default fullpath Sweave.sty
+%%% I use a custom one, in a path tex is aware of, with customizations
+%%% to the fancyvrb fonts and colors.
+\usepackage{Sweave}
+%%%%%%%%%%%%%%% Useful Sweave arguments!  %%%%%%%%%%%%%%%%%
+%%% echo=FALSE fig=TRUE results=hide eps=FALSE include=FALSE
+%%% eval=FALSE  
+%%% results=tex for tables (can also be used inline, see below)
+%%% \setkeys{Gin}{width=,height=} sizes the latex includegraphics
+%%%   while the codechunk args set the grdev size.
+%%% For lattice figures, trellis.par.set DOES NOT WORK 
+%%%   Instead, use par.settings=list() in the high-level call
+%%%   which can include eg grid.pars=list(fontfamily="Times") 
+
+
+\begin{document}
+ \begin{center} \section*{Linear Models in Statistics: HW#1} \end{center}
+\textbf{201060072: Boncho Ku}
+
+\begin{enumerate}
+\item[2.47]  Let
+$$
+\begin{pmatrix}[r]
+4 & 2 & 2 \\
+2 & 2 & 0 \\
+2 & 0 & 2 
+\end{pmatrix} 
+$$
+	\begin{enumerate}
+		\item[(a)] Find a symmetric generalized inverse for $\mathbf{A}$.
+			\begin{enumerate}
+				\item[Sol.] Since the first row of $\mathbf{A}$ is expressed as 
+				the sum of the last second and third rows of $\mathbf{A}$, 
+				and the second row is neither a multiple of the first and third, 
+				the rank of $\mathbf{A}$ is $2$. Let submatrix $\mathbf{C_{1}}$ be as follows:
+				$$
+					\mathbf{C_{1}}=
+					\begin{pmatrix}[r]
+					4 & 2 \\
+					2 & 2  
+					\end{pmatrix}				
+				$$
+				Then the inverse matrix of $\mathbf{C_1}$ is calculated as
+				$$
+					\mathbf{C_{1}^{-1}}=
+					\begin{pmatrix}[r]
+					 0.5 & -0.5 \\
+				   -0.5  & 1.0  
+					\end{pmatrix}
+				$$
+				By substituting $\mathbf{C_{1}}$ to $\mathbf{(C_{1}^{-1})^{T}}$, therefore, 
+				the symmetric generalized inverse matrix $\mathbf{A_{1}^{-}}$ can be derived as
+				$$
+					\mathbf{A_{1}^{-}}=
+					\begin{pmatrix}[r]
+					 0.5 & -0.5 & 0.0 \\
+					-0.5 &  1.0 & 0.0 \\
+					 0.0 &  0.0 & 0.0 
+					\end{pmatrix}				
+				$$
+			\end{enumerate}											
+		\item[(b)] Find a nonsymmetric generalized inverse for $\mathbf{A}$.
+			\begin{enumerate}
+				\item[Sol.] Let the submatrix of $\mathbf{A}$ be $\mathbf{C_{2}}$ as follows,
+				$$
+					\mathbf{C_{1}}=
+					\begin{pmatrix}[r]
+					2 & 2 \\
+					2 & 0  
+					\end{pmatrix}
+				$$
+				Then the inverse matrix of $\mathbf{C_2}$ is				
+				$$
+					\mathbf{C_{2}^{-1}}=
+					\begin{pmatrix}[r]
+					0.0 &  0.5 \\
+				    0.5 & -0.5  
+					\end{pmatrix}
+				$$					
+				The nonsymmetric generalized inverse $\mathbf{A_{2}^{-1}}$ is		
+				$$
+					\mathbf{A_{2}^{-}}=
+					\begin{pmatrix}[r]
+					0.0 & 0.0 & 0.0 \\
+					0.0 & 0.5 & 0.0 \\
+					0.5 & -0.5 & 0.0 
+					\end{pmatrix}
+				$$											
+			\end{enumerate}
+		\end{enumerate}
+\item	[2.76] For the positive definite matrix		
+$$
+	\mathbf{A}=
+	\begin{pmatrix}[r]
+		 2 & -1 \\
+		-1 &  2  
+	\end{pmatrix}
+$$	
+calculate the eigenvalues and eigenvectors 
+and find the square root matrix $\mathbf{A^{1/2}}$ as in (2.108). 
+Check by showing $\mathbf{(A^{1/2})^{2}=A}$.
+	\begin{enumerate}
+		\item[Sol.] By solving characteristic equation $\mathbf{Ax=\lambda x}$ 
+		\begin{eqnarray*}
+			\mathbf{|A-\lambda I|}&=&
+				\begin{pmatrix}[r]
+					 2-\lambda & -1 \\
+					-1 & 2-\lambda  
+				\end{pmatrix}
+			=(\lambda-3)(\lambda-1)=0\\
+			\\
+			&\therefore& \lambda_{1}=3,   \lambda_{2}=1
+		\end{eqnarray*}	
+			
+		Let $\mathbf{D}=\mathbf{diag}(\lambda_{1}, \lambda_{2})=\mathbf{diag}(3,1)$ 
+		and eigenvectors corresponding to each eigenvalue can be calculated as
+		  \begin{eqnarray*}
+			  \mathbf{x_{\lambda=3}}=
+			  \begin{pmatrix}[r]
+			   \frac{1}{\sqrt{2}}\\
+			  -\frac{1}{\sqrt{2}}
+			  \end{pmatrix}&,& 
+			  \mathbf{x_{\lambda=1}}=
+			  \begin{pmatrix}[r]
+			  \frac{1}{\sqrt{2}}\\
+			  \frac{1}{\sqrt{2}}
+			  \end{pmatrix}  
+		  \end{eqnarray*}
+		And let $\mathbf{H}$ be an orthogonal matrix consisting of eigenvectors of $\mathbf{A}$, 
+		then the square root matrix $\mathbf{A^{1/2}}$ can be derived by spectral decompositon, 		  
+		  \begin{eqnarray*}
+		  \mathbf{A^{1/2}}&=&\mathbf{HD^{1/2}H^{T}}\\
+		  &=&
+		  \begin{pmatrix}[r]
+		  	 \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}\\
+		  	-\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}
+		  \end{pmatrix} 
+		  \begin{pmatrix}[r]
+		  	{\sqrt{3}} & 0 \\
+		  	0 & 1
+		  \end{pmatrix} 
+		  \begin{pmatrix}[r]
+		  	\frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}}\\
+		  	\frac{1}{\sqrt{2}} &  \frac{1}{\sqrt{2}}
+		  \end{pmatrix}\\
+		  &=&\frac{1}{2}
+		  \begin{pmatrix}[r]		  
+		  1+\sqrt{3} & 1-\sqrt{3}\\
+		  1-\sqrt{3} & 1+\sqrt{3} 
+		  \end{pmatrix}  
+		 \end{eqnarray*}	
+	For checking $\mathbf{(A^{1/2})^{2}=A}$, 
+		\begin{eqnarray*}
+		  \begin{pmatrix}[r]		  
+		  1+\sqrt{3} & 1-\sqrt{3}\\
+		  1-\sqrt{3} & 1+\sqrt{3} 
+		  \end{pmatrix}  
+		  \begin{pmatrix}[r]		  
+		  1+\sqrt{3} & 1-\sqrt{3}\\
+		  1-\sqrt{3} & 1+\sqrt{3} 
+		  \end{pmatrix}
+		&=&
+		\begin{pmatrix}[r]
+			 2 & -1 \\
+			-1 & 2  
+		\end{pmatrix}
+		=\mathbf{A}		
+		\end{eqnarray*}				   		
+	\end{enumerate}
+\item[3.20] Let $\mathbf{y}=(y_{1},y_{2},y_{3})^{T}$ be a random vector and covariance matrix	
+	\begin{eqnarray*}
+		\mathbf{\upmu}=
+		\begin{pmatrix}[r]
+			 1 \\
+				   -1 \\
+			 3	
+		\end{pmatrix},
+		&&
+		\mathbf{\Sigma}=
+		\begin{pmatrix}[r]
+			1 & 1 & 0 \\
+			1 & 2 & 3 \\
+			0 & 3 & 10 
+		\end{pmatrix}
+	\end{eqnarray*}
+	\begin{enumerate}
+		\item[(a)] Let $z=2y_{1}-3y_{2}+y_{3}$. Find $E(z)$ and $var(z)$. 
+			\begin{enumerate}
+				\item[Sol.] Let $\mathbf{a}$ be a $3 \times 1$ constant vector with 
+				$\mathbf{a}=(2, -3, 1)^\mathbf{{T}}$. Then $z$ is equal to $\mathbf{a^{T}}\mathbf{y}$ and 
+				$E(z)=E(\mathbf{a^{T}y})=\mathbf{a^{T}}E(\mathbf{y})=\mathbf{a^{T}}\mathbf{\upmu}$ by 
+				Theorem 3.6D.  
+				\begin{eqnarray*}
+					\therefore E(z)=
+					\begin{pmatrix}[r]
+						2 & -3 & 1
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 1 \\
+							   -1 \\
+						 3	
+					\end{pmatrix}
+					&=&8					
+				\end{eqnarray*}
+				The variance of $z$ is $var(z)=var(\mathbf{a^{T}y})=\mathbf{a^{T}}\Sigma\mathbf{a}$ by Theorem 3.6C. 
+				\begin{eqnarray*}
+					\therefore var(z)=
+					\begin{pmatrix}[r]
+						2 & -3 & 1
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						1 & 1 & 0 \\
+						1 & 2 & 3 \\
+						0 & 3 & 10 
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 2 \\
+							   -3 \\
+						 1	
+					\end{pmatrix}
+					&=&2												
+				\end{eqnarray*}
+			\end{enumerate}
+		\item[(b)] Let $z_{1}=y_{1}+y_{2}+y_{3}$ and $z_{2}=3y_{1}+y_{2}-2y_{3}$. 
+		Find $E(\mathbf{z})$ and $\mathrm{cov(\mathbf{z})}$, where
+		 $\mathbf{z}=(z_{1}, z_{2})^\mathbf{T}$
+		 \begin{enumerate}
+		 	\item[Sol.] Since $z_{1}$ and $z_{2}$ are linear combinations of 
+		 	$\mathbf{y}$ with constant coefficent vectors, 
+		 	$\mathbf{a_{1}}=(1,1,1)^\mathbf{T}$ and $\mathbf{a_{2}}=(3,1,2)^\mathbf{T}$, respectively.
+		 	Let $\mathbf{A}$ be a $2 \times 3$ matrix consisting of $\mathbf{a_{1}^{T}}$
+		 	and $\mathbf{a_{2}^{T}}$. Then 
+		 	\begin{eqnarray*}
+		 		\mathbf{A}&=&
+				\begin{pmatrix}[r]
+					1 & 1 &  1 \\
+					3 & 1 & 		  -2 
+				\end{pmatrix}		 		
+		 	\end{eqnarray*}
+		 	By Theorem 3.6D, $E(\mathbf{z})$ and $\mathrm{cov(\mathbf{z})}$
+		 	can be calculated as
+		 	\begin{eqnarray*}
+		 	E(\mathbf{z})&=&\mathbf{A}\upmu=
+		 	\begin{pmatrix}[r]
+				1 & 1 &  1 \\
+				3 & 1 & 		  -2 		 	
+		 	\end{pmatrix}
+		 	\begin{pmatrix}[r]
+				 1 \\
+					   -1 \\
+				 3			 		
+		 	\end{pmatrix}
+		 	=
+		 	\begin{pmatrix}[r]
+				 3 \\
+					   -4 		 		
+		 	\end{pmatrix}\\
+		 	\mathrm{cov}(\mathbf{z})&=&\mathbf{A}\Sigma\mathbf{A^{T}}=
+		 	\begin{pmatrix}[r]
+				1 & 1 &  1 \\
+				3 & 1 & 		  -2 		 	
+		 	\end{pmatrix}		 		
+			\begin{pmatrix}[r]
+				1 & 1 & 0 \\
+				1 & 2 & 3 \\
+				0 & 3 & 10 
+			\end{pmatrix}
+			\begin{pmatrix}[r]
+				1 &  3 \\
+				1 &  1 \\
+				1 & 		 -2  
+			\end{pmatrix}
+			=
+			\begin{pmatrix}[r]
+				 21 & 		   -14 \\
+					   -14  &  45				
+			\end{pmatrix}					
+		 	\end{eqnarray*}
+		 \end{enumerate}							
+	\end{enumerate}	
+\item[3.21] Let $\mathbf{y}$ be a random vector and 
+covarance matrix $\upmu$ and $\Sigma$ as given in Problem 3.19 
+and define $\mathbf{w}=(w_{1}, w_{2}, w_{3})^\mathbf{T}$
+as follows: 
+	\begin{eqnarray*}
+		w_{1}&=&2y_{1}-y_{2}+y_{3} \\
+		w_{2}&=&y_{1}+2y_{2}-3y_{3} \\
+		w_{3}&=&y_{1}+y_{2}+2y_{3}
+	\end{eqnarray*}
+	\begin{enumerate}
+		\item[(a)] Find $E(\mathbf{w})$ and $\mathrm{cov}(\mathbf{w})$.
+			\begin{enumerate}
+				\item[Sol.] Define a matrix $\mathbf{B}$ as, 
+					\begin{eqnarray*}
+						\mathbf{B}=
+						\begin{pmatrix}[r]
+							2 & -1 &  1 \\
+							1 &  2 & -3 \\
+							1 &  1 &  2
+						\end{pmatrix}
+					\end{eqnarray*}
+				Then $E(\mathbf{w})$ and $\mathrm{cov}(\mathbf{w})$
+				are calculated as
+				\begin{eqnarray*}
+				  E(\mathbf{w})&=&E(\mathbf{By})=\mathbf{B}E(\mathbf{y})=\mathbf{B}\upmu\\
+				  &=&
+				  \begin{pmatrix}[r]
+					2 & -1 &  1 \\
+					1 &  2 & -3 \\
+					1 &  1 &  2				  	
+				  \end{pmatrix}
+				  \begin{pmatrix}[r]
+					 1 \\
+				    -1 \\
+					 3			 					  
+				  \end{pmatrix}
+				  =
+				  \begin{pmatrix}[r]
+					  6\\
+				    -10\\
+					  6				  
+				  \end{pmatrix}\\
+				  \\
+				  \mathrm{cov}(\mathbf{w})&=&\mathrm{cov}(\mathbf{By})=\mathbf{B\Sigma B^{T}}\\
+				  &=&
+				  \begin{pmatrix}[r]
+					2 & -1 &  1 \\
+					1 &  2 & -3  \\
+					1 &  1 &  2				  	
+				  \end{pmatrix}	
+				\begin{pmatrix}[r]
+					1 & 1 & 0 \\
+					1 & 2 & 3 \\
+					0 & 3 & 10 
+				\end{pmatrix}
+				  \begin{pmatrix}[r]
+					 2 &  1 & 1 \\
+					-1 &  2 & 1  \\
+					 1 & -3 & 2				  	
+				  \end{pmatrix}
+				  =
+				  \begin{pmatrix}[r]
+					  6 & -14 & -18 \\
+			  	    -14 & 67 &  -49 \\
+					 18 &-49 &   57 
+				  \end{pmatrix}			  							    	  
+			    \end{eqnarray*}
+			\end{enumerate}
+		\item[(b)] Using $\mathbf{z}$ as defined in Problem 3.19(b), find $\mathrm{cov}(\mathbf{z, w})$.			
+			\begin{enumerate}
+				\item[Sol.] By Theorem 3.6D, 
+					\begin{eqnarray*}
+						\mathrm{cov}(\mathbf{z, w})&=&\mathrm{cov}(\mathbf{Ay, By})=\mathbf{A\Sigma B^{T}}	\\
+						&=&
+						 	\begin{pmatrix}[r]
+								1 & 1 &  1 \\
+								3 & 1 & 		  -2 		 	
+						 	\end{pmatrix}
+					\begin{pmatrix}[r]
+						1 & 1 & 0 \\
+						1 & 2 & 3 \\
+						0 & 3 & 10 
+					\end{pmatrix}
+				   \begin{pmatrix}[r]
+					 2 &  1 & 1 \\
+				    -1 &  2 & 1  \\
+					 1 & -3 & 2				  	
+				   \end{pmatrix}
+				   =
+				   \begin{pmatrix}[r]
+					 	11 &  -25 &   34 \\
+					     -8 &  53 &   -31				   
+				   \end{pmatrix}										 												
+				 \end{eqnarray*}					
+			\end{enumerate}		                                                                                                                                         
+	\end{enumerate}
+\end{enumerate}
+
+
+%\thispagestyle{empty} % No page number first page
+
+%%% Preserve comments and spacing of echo'd R
+%%% (ESS is better than R at indenting!)
+
+\newpage
+\begin{center} \section*{Linear Models in Statistics: HW#2} \end{center}
+\textbf{201060072: Boncho Ku}
+
+\begin{enumerate}
+\item[4.16]  Suppose $\mathbf{y}$ is $N_{4}(\upmu, \Sigma)$, where
+	\begin{eqnarray*}
+		\upmu=
+		\begin{pmatrix}[r]
+			 1\\
+			 2\\
+			 3\\
+			-2
+		\end{pmatrix},&&
+		\Sigma=
+		\begin{pmatrix}[r]
+			 4& 2& -1& 2\\
+			 2& 6& 3& 2\\
+		   	-1& 3& 5& -4\\
+		     2&-2&-4& 4  
+		\end{pmatrix}
+	\end{eqnarray*}
+		\begin{enumerate}
+		\item[(a)] The joint marginal distribution of $y_{1}$ and $y_{3}$
+			\begin{enumerate}
+				\item[Sol.] Let $\mathbf{a_{1}}=(1~0~1~0)^{T}$. Then joint
+				marginal distribution of $y_{1}$ and $y_{3}$ can be expressed as 
+				$\mathbf{z_{1}}=\mathbf{a_{1}}^{T}\mathbf{y}$. 
+				The mean and variance of $\mathbf{z_{1}}$ is
+				\begin{eqnarray*}
+					E(\mathbf{z_{1}})&=&E(\mathbf{a_{1}}^{T}\mathbf{y})=\mathbf{a_{1}}^{T}\upmu\\
+					\\
+					&=&
+					\begin{pmatrix}[r]
+						1 & 0 & 1 & 0
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 1\\
+						 2\\
+						 3\\
+						-2				
+					\end{pmatrix}
+					=
+					\begin{pmatrix}[r]
+						1 \\
+						3 \\
+					\end{pmatrix}\\
+					\\
+					\mathrm{cov}(\mathbf{z_{1}})&=&\mathbf{a_{1}}^{T} \Sigma \mathbf{a_{1}}=
+					\begin{pmatrix}[r]
+						 4 & -1 \\
+					   -1 &  5
+					\end{pmatrix}\\				
+				\end{eqnarray*}
+				Therefore, joint marginal distribution of $y_{1}$ and $y_{3}$ is
+				\begin{eqnarray*}
+				\begin{pmatrix}[r]
+					y_{1} \\
+					y_{2}
+				\end{pmatrix}&=&
+					N_{2}\begin{bmatrix}[r]
+						\begin{pmatrix}[r]
+							1 \\
+							3 \\							
+						\end{pmatrix}, 
+						\begin{pmatrix}[r]
+						 4 & -1 \\
+					    -1 & 5						
+						\end{pmatrix}
+					\end{bmatrix}
+				\end{eqnarray*}
+			\end{enumerate}
+			
+		\item[(b)] The marginal distribution of $y_{2}$
+			\begin{enumerate}
+				\item[Sol.] Let $\mathbf{a_{2}}=(0~1~0~0)^{T}$. 
+				Then marginal distribution of $y_{2}$ is
+				\begin{equation*}
+					y_{2} \sim N(2, 6)
+				\end{equation*}
+			\end{enumerate}
+			
+		\item[(c)] The distribution of $z=y_{1}+2y_{2}-y_{3}+3y_{4}$
+			\begin{enumerate}
+				\item[Sol.] Let $\mathbf{a_{3}}=(1~2~-1~3)^{T}$. Then
+				$z=\mathbf{a_{3}}^{T}\mathbf{y}\sim N(\mathbf{a_{3}}^{T}\upmu, 
+				    \mathbf{a_{3}}^{T} \Sigma \mathbf{a_{3}})$. 
+				Therefore, the distribution of $z$ is expressed as
+				\begin{eqnarray*}
+					\mathbf{a_{3}}^{T}\upmu&=&
+					\begin{pmatrix}[r]
+						1 & 2 & -1 & 3
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 1\\
+						 2\\
+						 3\\
+						-2										
+					\end{pmatrix}=-4\\
+					\mathbf{a_{3}}^{T} \Sigma \mathbf{a_{3}}&=&
+					\begin{pmatrix}[r]
+						1 & 2 & -1 & 3					
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 4& 2& -1& 2\\
+						 2& 6& 3& 2\\
+					    -1& 3& 5& -4\\
+					     2&-2&-4& 4  						
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 1 \\
+						 2 \\
+					    -1 \\
+						 3 
+					\end{pmatrix}=79\\
+				\therefore z&\sim&N_{1}(-4,~79)											
+				\end{eqnarray*} 
+			\end{enumerate}
+			
+		\item[(d)] The joint distribution of $z_{1}=y_{1}+y_{2}-y_{3}-y_{4}$ and
+		$z_{2}=-3y_{1}+y_{2}+2y_{3}-2y_{4}$
+			\begin{enumerate}
+				\item[Sol.] Let $\mathbf{z_{2}}=(z_{1}~z_{2})^{T}$. Then the distribution of 
+				$\mathbf{z_{2}}~N(\mathbf{A}\upmu, \mathbf{A}\Sigma\mathbf{A}^{T})$, 
+				where
+				$$
+					\mathbf{A}=
+					\begin{pmatrix}[r]
+						1 & 1 & -1 & -1 \\
+						   -3 & 1 & 2 & -2 
+					\end{pmatrix}   
+				$$
+				The mean vector and covariance matrix of $\mathbf{z_{2}}$ are calculated as
+				\begin{eqnarray*}
+					\mathbf{A}\upmu&=&
+					\begin{pmatrix}[r]
+						1 & 1 & -1 & -1 \\
+					   -3 & 1 & 2 & -2 
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 1\\
+						 2\\
+						 3\\
+						-2										
+					\end{pmatrix}=
+					\begin{pmatrix}[r]
+						2 \\
+						9 
+					\end{pmatrix}\\
+					\mathbf{A}\Sigma\mathbf{A}^{T}&=&
+					\begin{pmatrix}[r]
+						1 & 1 & -1 & -1 \\
+					   -3 & 1 & 2 & -2 
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						 4& 2& -1& 2\\
+						 2& 6& 3&  2\\
+					    -1& 3& 5& -4\\
+					     2&-2&-4& 4  						
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+					 1 & -3\\
+					 1 & 1\\
+				    -1 & 2\\
+					-1 &-2
+					\end{pmatrix}=
+					\begin{pmatrix}[r]
+						 11 & -6 \\
+					     -6 & 154
+					\end{pmatrix}
+				\end{eqnarray*} 
+				Therefore, the joint distribution of $z_{1}$ and $z_{2}$ is
+				\begin{eqnarray*}
+					\begin{pmatrix}[r]
+						z_{1} \\
+						z_{2}
+					\end{pmatrix}=
+					N_{2}
+					\begin{bmatrix}[r]
+						\begin{pmatrix}[r]
+							2 \\
+							9 						
+						\end{pmatrix},~
+						\begin{pmatrix}[r]
+						 11 & -6 \\
+					     -6 & 154						
+						\end{pmatrix}						
+					\end{bmatrix}
+				\end{eqnarray*}
+			\end{enumerate}
+		
+		\item[(e)] $f(y_{1},~y_{2} | y_{3},~y_{4})$
+			\begin{enumerate}
+				\item[Sol.] The vector $\mathbf{y}$ can be partitioned with $\mathbf{v}$ and $\mathbf{w}$,
+				where $\mathbf{v}=(y_{1}~y_{2})^T$ and $\mathbf{w}=(y_{3}~y_{4})^T$. Then 
+				\begin{equation*}
+					\upmu_{\mathbf{v}}=
+						\begin{pmatrix}[r]
+						1 \\
+						2
+						\end{pmatrix},~
+					\upmu_{\mathbf{w}}=
+						\begin{pmatrix}[r]
+						3 \\
+						-2
+						\end{pmatrix},~
+					\Sigma_{\mathbf{v}}=
+						\begin{pmatrix}[r]
+							4 & 2 \\
+							2 & 6
+						\end{pmatrix},~
+					\Sigma_{\mathbf{w}}=
+						\begin{pmatrix}[r]
+							5 & -4 \\
+						   -4 &  4 
+						\end{pmatrix},~
+					\Sigma_{\mathbf{vw}}=								
+						\begin{pmatrix}[r]
+							-1 &  2 \\
+							3  & -2
+						\end{pmatrix}													
+				\end{equation*}
+				Now, by Theorem 4.4D we obtain
+				\begin{eqnarray*}
+					E(\mathbf{v}|\mathbf{w})&=&
+					\mathbf{\upmu_{\mathbf{v}}+\Sigma_{\mathbf{vw}}\Sigma_{\mathbf{w}}^{-1}(\mathbf{w}-\upmu_{\mathbf{w}})}\\
+					\\
+					&=&
+					\begin{pmatrix}[r]
+					1 \\
+					2 
+					\end{pmatrix}+
+					\begin{pmatrix}[r]
+					-1 & 2 \\
+					3  &-2 
+					\end{pmatrix}					
+					\begin{pmatrix}[r]
+					1 & 1	\\
+					1 & 5/4
+					\end{pmatrix}
+					\begin{pmatrix}[r]										
+						\begin{pmatrix}[r]
+						y_{3} \\
+						y_{4}
+						\end{pmatrix}-
+						\begin{pmatrix}[r]
+						 3 \\
+						-2
+						\end{pmatrix}
+					\end{pmatrix}\\
+					&=&
+					\begin{pmatrix}[r]
+					y_{3}+3/2y_{4}+1 \\
+					y_{3}+1/2y_{4}
+					\end{pmatrix}\\
+					\\
+				\mathrm{cov}(\mathbf{v|w}) &=& 
+				\mathbf{\Sigma_{\mathbf{v}}-\Sigma_{\mathbf{vw}}\Sigma_{\mathbf{w}}^{-1}\Sigma_{\mathbf{wv}}}\\
+				\\
+				&=&
+				\begin{pmatrix}[r]
+					4 & 2 \\
+					2 & 6				 
+				\end{pmatrix}-				
+				\begin{pmatrix}[r]
+					-1 & 2 \\
+					3 & -2
+				\end{pmatrix}
+				\begin{pmatrix}[r]
+					1 & 1	\\
+					1 & 5/4				
+				\end{pmatrix}
+				\begin{pmatrix}[r]
+					-1 & 3 \\
+					 2 & -2
+				\end{pmatrix}\\
+				&=&
+				\begin{pmatrix}[r]
+					2 & 2 \\
+					2 & 4
+				\end{pmatrix}
+				\end{eqnarray*}
+				Therefore, 
+				\begin{eqnarray*}
+					f(y_{1},~y_{2} | y_{3},~y_{4})&\sim&
+					N_{2}
+					\begin{bmatrix}[r]
+						\begin{pmatrix}[r]
+							y_{3}+3/2y_{4}+1 \\
+							y_{3}+1/2y_{4}							
+						\end{pmatrix},~
+						\begin{pmatrix}[r]
+							2 & 2 \\
+							2 & 4
+						\end{pmatrix}
+					\end{bmatrix}
+				\end{eqnarray*}
+			\end{enumerate}
+			
+		\item[(f)] $f(y_{1},~y_{3} | y_{2},~y_{4})$
+			\begin{enumerate}
+				\item[Sol.] The vector $\mathbf{y}$ can be partitioned with $\mathbf{s}$ and $\mathbf{t}$,
+				where $\mathbf{s}=(y_{1}~y_{3})^T$ and $\mathbf{t}=(y_{2}~y_{4})^T$. Then 
+				\begin{equation*}
+					\upmu_{\mathbf{s}}=
+						\begin{pmatrix}[r]
+						1 \\
+						3
+						\end{pmatrix},~
+					\upmu_{\mathbf{t}}=
+						\begin{pmatrix}[r]
+						 2 \\
+						-2
+						\end{pmatrix},~
+					\Sigma_{\mathbf{s}}=
+						\begin{pmatrix}[r]
+							4 & -1 \\
+							-1 & 5
+						\end{pmatrix},~
+					\Sigma_{\mathbf{t}}=
+						\begin{pmatrix}[r]
+							6 & -2 \\
+						   -2 &  4 
+						\end{pmatrix},~
+					\Sigma_{\mathbf{st}}=								
+						\begin{pmatrix}[r]
+							2 &  2 \\
+							3  & -4
+						\end{pmatrix}													
+				\end{equation*}
+				Now, by Theorem 4.4D we obtain
+				\begin{eqnarray*}
+					E(\mathbf{s}|\mathbf{t})&=&
+					\mathbf{\upmu_{\mathbf{s}}+\Sigma_{\mathbf{st}}\Sigma_{\mathbf{t}}^{-1}(\mathbf{t}-\upmu_{\mathbf{t}})}\\
+					\\
+					&=&
+					\begin{pmatrix}[r]
+					1 \\
+					3 
+					\end{pmatrix}+
+					\begin{pmatrix}[r]
+					2 &  2 \\
+					3  &-4 
+					\end{pmatrix}					
+					\begin{pmatrix}[r]
+					2/10 & 1/10	\\
+					1/10 & 3/10
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						y_{2}-2 \\
+						y_{4}+2
+						\end{pmatrix}\\
+					&=&
+					\begin{pmatrix}[r]
+					3/5y_{2}+4/5y_{4}+7/5 \\
+					1/5y_{2}-9/10y_{4}+4/5
+					\end{pmatrix}\\
+					\\
+				\mathrm{cov}(\mathbf{s|t}) &=& 
+				\mathbf{\Sigma_{\mathbf{s}}-\Sigma_{\mathbf{st}}\Sigma_{\mathbf{t}}^{-1}\Sigma_{\mathbf{ts}}}\\
+				\\
+				&=&
+				\begin{pmatrix}[r]
+					4 & -1 \\
+				   -1 & 5			 
+				\end{pmatrix}-				
+				\begin{pmatrix}[r]
+					2 &  2 \\
+					3  &-4 
+				\end{pmatrix}
+				\begin{pmatrix}[r]
+					2/10 & 1/10	\\
+					1/10 & 3/10				
+				\end{pmatrix}
+				\begin{pmatrix}[r]
+					 2 & 3 \\
+					 2 & -4
+				\end{pmatrix}\\
+				&=&
+				\begin{pmatrix}[r]
+					6/5 & 2/5 \\
+					2/5 & 4/5
+				\end{pmatrix}
+				\end{eqnarray*}
+				Therefore, 
+				\begin{eqnarray*}
+					f(y_{1},~y_{3} | y_{2},~y_{4})&\sim&
+					N_{2}
+					\begin{bmatrix}[r]
+						\begin{pmatrix}[r]
+							3/5y_{2}+4/5y_{4}+7/5 \\
+							1/5y_{2}-9/10y_{4}+4/5							
+						\end{pmatrix},~
+						\begin{pmatrix}[r]
+							6/5 & 2/5 \\
+							2/5 & 4/5
+						\end{pmatrix}
+					\end{bmatrix}
+				\end{eqnarray*}
+			\end{enumerate}
+					
+		\item[(g)] $\rho_{13}$
+			\begin{enumerate}
+				\item[Sol.]
+				\begin{eqnarray*}
+					\rho_{13}&=&-\frac{1}{\sqrt{4}\sqrt{5}}=-\frac{\sqrt{5}}{10}
+				\end{eqnarray*}
+			\end{enumerate}
+			
+		\item[(h)] $\rho_{13 \cdot 24}$
+			\begin{enumerate}
+				\item[Sol.] From the result of (f), 
+					\begin{eqnarray*}
+					\rho_{13 \cdot 24}&=&\frac{2/5}{\sqrt{6/5}\sqrt{4/5}}=\frac{1}{\sqrt{6}}
+					\end{eqnarray*}
+			\end{enumerate}
+		
+		\item[(i)] $f(y_{1}|y_{2},~y_{3},~y_{4})$
+			\begin{enumerate}
+				\item[Sol.] Let $\mathbf{x}=(y_{2}~y_{3}~y_{4})^T$. Then
+				\begin{equation*}
+					\mu_{y_{1}}=1,~
+					\mathbf{\upmu_{x}}=
+					\begin{pmatrix}[r]
+						2 \\
+						3 \\
+					   -2
+					\end{pmatrix},~
+					\sigma_{y_{1}}^{2}=4,~
+					\mathbf{\Sigma_{x}}=
+					\begin{pmatrix}[r]
+						6 & 3 & -2 \\
+						3 & 5 & -4 \\
+					   -2 &-4 & 4 
+					\end{pmatrix},~
+					\mathbf{\Sigma}_{y_{1}, \mathbf{x}}=
+					\begin{pmatrix}[r]
+					2 & -1 & 2
+					\end{pmatrix}
+				\end{equation*}
+				Now, conditional mean and variance of $y_{1}$ given $\mathbf{x}$ is 
+				\begin{eqnarray*}
+					E(y_{1}|\mathbf{x})&=&
+					\mu_{y_{1}}+\mathbf{\Sigma}_{y_{1}, \mathbf{x}}\mathbf{\Sigma_{\mathbf{x}}^{-1}}
+					(\mathbf{x}-\mathbf{\upmu}_{\mathbf{x}})\\
+					&=&
+					1+
+					\begin{pmatrix}[r]
+						2 & -1 & 2
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						1/4 & -1/4 & -1/8 \\
+					   -1/4 &  5/4 &  9/8 \\
+					   -1/8 &  9/8 & 21/16 
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						y_{2}-2 \\
+						y_{3}-3 \\
+						y_{4}+2
+					\end{pmatrix}\\
+					&=&
+					\frac{2y_{2}+2y_{3}+5y_{4}}{4}+1\\
+					\mathrm{cov}(y_{1}|\mathbf{x}) &=&
+					\sigma_{y_{1}}^{2}-\mathbf{\Sigma}_{y_{1},\mathbf{x}}
+					\mathbf{\Sigma_{\mathbf{x}}^{-1}}\mathbf{\Sigma}_{\mathbf{x},y_{1}}\\
+					&=&
+					4-
+					\begin{pmatrix}[r]
+						2 & -1 & 2					
+					\end{pmatrix}
+					\begin{pmatrix}[r]
+						1/4 & -1/4 & -1/8 \\
+					   -1/4 &  5/4 &  9/8 \\
+					   -1/8 &  9/8 & 21/16 					
+					\end{pmatrix} 					 					 
+					\begin{pmatrix}[r]
+						2 \\
+					   -1 \\
+					    2
+					\end{pmatrix}\\ 					 					 
+					&=& 1\\
+					&\therefore& 
+					f(y_{1}|y_{2},~y_{3},~y_{4}) \sim N\large ( \frac{2y_{2}+2y_{3}+5y_{4}}{4}+1, 1\large )			 		 					 
+				\end{eqnarray*}
+			\end{enumerate}
+	\end{enumerate}
+	\item[5.26] Suppose $\mathbf{y}$ is $N_{n}(\mathbf{\upmu,~\Sigma})$, where 
+		$\mathbf{\upmu}=\mu\mathbf{j}$ and 
+			\begin{eqnarray*}
+				\mathbf{\Sigma}&=&
+				\sigma^{2}
+				\begin{pmatrix}[r]
+					1    & \rho & \cdots & \rho \\
+				\rho   &     1   & \cdots & \rho \\
+				\vdots& \vdots & &\vdots\\
+				\rho & \rho &\cdots& 1	
+				\end{pmatrix}
+			\end{eqnarray*}
+		Thus $E(y_{i})=\mu$ for all $i$, $\mathrm{var}{y_{i}}=\sigma^{2}$ for all $i$, and
+		 $\mathrm{cov}(y_{i},~y_{j})=\sigma^{2}\rho$ for all $i \neq j$; that is, the $y$'s are
+		 equicorrelated.
+		 \begin{enumerate}
+		 	\item[(a)] Show that $\mathbf{\Sigma}$ can be written in the form of 
+		 	$\mathbf{\Sigma}=\sigma^2[(1-\rho)\mathbf{I}+\rho\mathbf{J}]$.
+		 	\begin{enumerate}
+		 		\item[Sol.] 
+		 		\begin{eqnarray*}
+		 			\mathbf{\Sigma}&=&\sigma^{2}[\mathbf{I}+\rho\mathbf{J}-\rho\mathbf{I}]\\
+		 								  &=&\sigma^{2}[(1-\rho)\mathbf{I}+\rho\mathbf{J}]
+		 		\end{eqnarray*}
+		 	\end{enumerate}
+		 	\item[(b)] Show that $\sum_{i=1}^{n}(y_{i}-\bar{y})^{2}/
+		 	[\sigma^{2}(1-\rho)]$ is $\chi^{2}(n-1)$.
+		 	\begin{enumerate}
+		 		\item[Sol.] Since $\mathbf{y} \sim N_{n}(\mathbf{\upmu,~\Sigma})$ and  
+		 		\begin{eqnarray*}
+		 			\frac{\sum_{i=1}^{n}(y_{i}-\bar{y})^{2}}{\sigma^{2}(1-\rho)}&=&
+					\frac{\mathbf{y}^{T}(\mathbf{{I}_{n}}-\mathbf{P})\mathbf{y}}{\sigma^{2}(1-\rho)}
+		 		\end{eqnarray*}
+		 		where $\mathbf{I}_{n}$ is $n \times n$ identity matrix and $\mathbf{P}=1/n\mathbf{J}_{n}$.
+		 		Let $\mathbf{A}=\mathbf{{I}_{n}}-\mathbf{P}$, then $\mathbf{A\Sigma}$ is idempotent matrix, since 
+		 		\begin{eqnarray*}
+		 			\mathbf{A\Sigma}&=&\frac{\sigma^{2}}{\sigma^{2}(1-\rho)}
+		 			(\mathbf{I}_{n}-\frac{1}{n}\mathbf{J}_{n})[(1-\rho)\mathbf{I}_{n}+\rho\mathbf{I}_{n}]\\
+		 			&=&\frac{1}{1-\rho}[(1-\rho)\mathbf{I}_{n}+(\rho-\frac{1}{n}+\frac{\rho}{n}-\frac{n\rho}{n})\mathbf{J}_{n}]\\
+		 			&=&\frac{1}{1-\rho}[(1-\rho)\mathbf{I}_{n}-\frac{(1-\rho)}{n}\mathbf{J}_{n}]\\
+		 			&=&\mathbf{I}_{n}-\frac{1}{n}\mathbf{J}_{n}	
+		 		\end{eqnarray*}
+		 		Therefore, the rank of $\mathbf{A}$, $r=n-1$ by Theorem 2.13D. To find $\lambda$, which is given by
+		 		\begin{eqnarray*}
+		 			\lambda&=&\frac{\mathbf{\upmu}^{T}\mathbf{A}\mathbf{\upmu}}{2\sigma^{2}(1-\rho)}
+		 			   			=0
+		 		\end{eqnarray*}  
+		 		By Theorem 5.5A, 
+		 		\begin{eqnarray*}
+		 			\frac{\sum_{i=1}^{n}(y_{i}-\bar{y})^{2}}{[\sigma^{2}(1-\rho)]}
+		 			&\sim& \chi^{2}(n-1)
+		 		\end{eqnarray*}
+		 	\end{enumerate}
+		 \end{enumerate}
+	\item[5.29] if $\mathbf{y}$ is $N_{4}(\mathbf{\upmu}, \mathbf{\Sigma})$, where
+	\begin{eqnarray*}
+	   \mathbf{\upmu}=
+		\begin{pmatrix}[r]
+		 3 \\
+	        -2 \\
+		 1 \\
+                 4
+		\end{pmatrix},
+		&&
+	       \mathbf{\Sigma}=
+	       \begin{pmatrix}[r]
+		 1 & 0 & 0 & 0 \\
+ 		 0 & 2 & 0 & 0 \\
+		 0 & 0 & 3 & -4 \\
+                 0 & 0 &-4 & 6
+	       \end{pmatrix}
+	\end{eqnarray*}
+	Find a matrix $\mathbf{A}$ such that $\mathbf{y}^{T}\mathbf{A}\mathbf{y}$ is 
+	$\chi^{2}(4,~\frac{1}{2}\mathbf{\upmu}^{T}\mathbf{A}\mathbf{\upmu})$. 
+	What is $\lambda=\frac{1}{2}\mathbf{\upmu}^{T}\mathbf{A}\mathbf{\upmu}$?
+	\begin{enumerate}
+	  \item[Sol.] To suffice  $\mathbf{y}^{T}\mathbf{A}\mathbf{y} \sim 
+	  \chi^{2}(4,~\frac{1}{2}\mathbf{\upmu}^{T}\mathbf{A}\mathbf{\upmu})$, $\mathbf{A\Sigma}$
+	  has to be an idempotent matrix such that 
+          $(\mathbf{A\Sigma})(\mathbf{A\Sigma})=\mathbf{A\Sigma}\mathbf{A}\mathbf{\Sigma}
+          =\mathbf{A\Sigma}$ with $4 \times 4$ full rank symmetric matrix $\mathbf{A}$. To find $\mathbf{A}$, 
+	  $$\mathbf{A}=\mathbf{A}(\mathbf{\Sigma}\mathbf{A}\mathbf{\Sigma})(\mathbf{\Sigma}\mathbf{A}\mathbf{\Sigma})^{-1}=
+          \mathbf{A\Sigma}(\mathbf{\Sigma}\mathbf{A}\mathbf{\Sigma})^{-1}=\mathbf{\Sigma}^{-1}$$
+	  \begin{eqnarray*}
+              \therefore \lambda&=&\frac{1}{2}		
+	      \begin{pmatrix}[r]
+                3 & -2 & 1  & 4
+	      \end{pmatrix}		
+	      \begin{pmatrix}[r]
+		    1  & 0 & 0 & 0 \\
+		    0  & \frac{1}{2} & 0 & 0 \\
+		    0  & 0 & 3 & 2 \\
+		    0  & 0 & 2 & \frac{3}{2}             
+              \end{pmatrix}
+	      \begin{pmatrix}[r]
+		 3 \\
+	        -2 \\
+		 1 \\
+                 4		
+	      \end{pmatrix}=27		
+          \end{eqnarray*}	  
+	\end{enumerate}
+	\item[5.30] Suppose $\mathbf{y}$ is $N_{3}(\mathbf{\upmu}, \sigma^{2}\mathbf{I})$ and let
+       \begin{eqnarray*}
+ 	   \mathbf{\upmu}=
+		\begin{pmatrix}[r]
+		 3 \\
+	        -2 \\
+		 1 
+		\end{pmatrix},
+		&
+	       \mathbf{A}=\frac{1}{3}
+	       \begin{pmatrix}[r]
+		 2  & -1 & -1 \\
+ 		 -1 &  2 & -1  \\
+		 -1 & -1 & 2 
+	       \end{pmatrix},		   
+	      &
+              \mathbf{B}=
+             \begin{pmatrix}[r]
+    	       1  & 1 & 1 \\
+               1 &  0 & -1 
+	     \end{pmatrix}	
+       \end{eqnarray*}
+	\begin{enumerate}
+	  \item[(a)] What is the distribution of $\mathbf{y}^{T}\mathbf{A}\mathbf{y}/\sigma^{2}$?
+		\begin{enumerate}
+		   \item[Sol.] To verify $\mathbf{A}$ is idempotent, 
+		   \begin{eqnarray*}
+			\mathbf{A}^{2}&=&\mathbf{AA}=\frac{1}{9}
+	   	       \begin{pmatrix}[r]
+			 2  & -1 & -1 \\
+	 		 -1 &  2 & -1  \\
+			 -1 & -1 & 2 
+		       \end{pmatrix}
+	   	       \begin{pmatrix}[r]
+			 2  & -1 & -1 \\
+	 		 -1 &  2 & -1  \\
+			 -1 & -1 & 2 
+		       \end{pmatrix}=\frac{1}{3}
+	   	       \begin{pmatrix}[r]
+			 2  & -1 & -1 \\
+	 		 -1 &  2 & -1  \\
+			 -1 & -1 & 2 
+			\end{pmatrix}			
+		   \end{eqnarray*}					
+		   $\mathrm{rank}(\mathbf{A})=\mathrm{tr}(\mathbf{A})=\frac{2+2+2}{3}=2$. 
+                  Therefore, $\mathbf{y}^{T}\mathbf{A}\mathbf{y}/\sigma^{2}
+			\sim \chi^{2}(2, ~\mathbf{\upmu}^{T}\mathbf{A}\mathbf{\upmu}/{2\sigma^2})$,
+		  where 
+		  \begin{eqnarray*}	
+		  \frac{1}{2}\mathbf{\upmu}^{T}\mathbf{A}\mathbf{\upmu}=\frac{1}{6}
+		  \begin{pmatrix}[r]
+		   3 & -2 & 1
+		  \end{pmatrix}
+		  \begin{pmatrix}[r]
+			 2  & -1 & -1 \\
+ 			 -1 &  2 & -1  \\
+			 -1 & -1 & 2 			
+		  \end{pmatrix}
+		  \begin{pmatrix}[r]
+			 3 \\
+		        -2 \\
+			 1 		
+		  \end{pmatrix}=\frac{38}{6}               
+                  \end{eqnarray*}  
+		\end{enumerate}
+	  \item[(b)] Are $\mathbf{y}^{T}\mathbf{A}\mathbf{y}$ and $\mathbf{By}$ independent?
+		\begin{enumerate}
+		  \item[Sol.] 
+		  \begin{eqnarray*}
+			\mathbf{BA}&=&\frac{1}{3}
+			\begin{pmatrix}[r]
+		    	       1  & 1 & 1 \\
+		               1 &  0 & -1 			   
+			\end{pmatrix}
+			\begin{pmatrix}[r]
+			 2  & -1 & -1 \\
+	 		 -1 &  2 & -1  \\
+			 -1 & -1 & 2 				
+			\end{pmatrix}=
+			\begin{pmatrix}[r]
+			   0  &  0  &  0 \\
+			  1   &  0  & -1
+			\end{pmatrix}\\
+		        &\neq&
+			\mathbf{O}
+		  \end{eqnarray*}
+		  By Theorem 5.6A, therefore, $\mathbf{y}^{T}\mathbf{A}\mathbf{y}$ and $\mathbf{By}$ 
+		  are \textbf{not independent}.
+		\end{enumerate}
+	  \item[(c)] Are $\mathbf{y}^{T}\mathbf{A}\mathbf{y}$ and $y_{1}+y_{2}+y_{3}$ independent?
+		\begin{enumerate}
+		  \item[Sol.] Let $\mathbf{a}=(1~1~1)^{T}$, then $y_{1}+y_{2}+y_{3}=\mathbf{a}^{T}\mathbf{y}$.
+		  To verify the independence between $\mathbf{y}^{T}\mathbf{A}\mathbf{y}$ and $\mathbf{a}^{T}\mathbf{y}$, 
+		  \begin{eqnarray*}
+		     \mathbf{a}^{T}\mathbf{A}&=&\frac{1}{3}
+		    \begin{pmatrix}[r]
+			1 & 1 & 1
+		    \end{pmatrix}
+		    \begin{pmatrix}[r]
+			 2  & -1 & -1 \\
+	 		 -1 &  2 & -1  \\
+			 -1 & -1 & 2 				
+		    \end{pmatrix}=
+		    \begin{pmatrix}[r]
+			0 & 0 & 0
+		    \end{pmatrix}\\
+		    &=&\mathbf{O}
+		  \end{eqnarray*}
+		  Therefore,  $\mathbf{y}^{T}\mathbf{A}\mathbf{y}$ and $\mathbf{a}^{T}\mathbf{y}$
+                  are independent.
+		\end{enumerate}
+	\end{enumerate}
+\end{enumerate}
+\newpage
+\begin{center} \section*{Linear Models in Statistics: HW#3} \end{center}
+\textbf{201060072: Boncho Ku}
+\begin{enumerate}
+  \item[7.23] Show that $(\mathbf{y}-\mathbf{X}\pmb{\upbeta})^{T}(\mathbf{y}-\mathbf{X}\pmb{\upbeta})=
+  (\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})^{T}(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})+
+  (\pmb{\hat{\upbeta}}-\pmb{\upbeta})^{T}\mathbf{X}^{T}\mathbf{X}(\pmb{\hat{\upbeta}}-\pmb{\upbeta})$
+  as in (7.53) in the proof of Theorem7.6C.
+  \begin{enumerate}
+	\item[Sol.]
+	\begin{eqnarray*}
+	   (\mathbf{y}-\mathbf{X}\pmb{\upbeta})^{T}(\mathbf{y}-\mathbf{X}\pmb{\upbeta})&=&
+           (\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}}+\mathbf{X}\pmb{\hat{\upbeta}}-\mathbf{X}\pmb{\upbeta})^{T}
+           (\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}}+\mathbf{X}\pmb{\hat{\upbeta}}-\mathbf{X}\pmb{\upbeta})\\
+           &=&
+           [(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})^{T}-(\pmb{\upbeta}-\pmb{\hat{\upbeta}})^{T}\mathbf{X}^{T}]
+           [(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})-\mathbf{X}(\pmb{\upbeta}-\pmb{\hat{\upbeta}})]\\
+           &=&
+	  (\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})^{T}(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})+
+          (\pmb{\upbeta}-\pmb{\hat{\upbeta}})^{T}\mathbf{X}^{T}\mathbf{X}(\pmb{\upbeta}-\pmb{\hat{\upbeta}})-\\
+           &~&
+          (\pmb{\upbeta}-\pmb{\hat{\upbeta}})^{T}\mathbf{X}^{T}(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})-
+          (\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})^{T}\mathbf{X}(\pmb{\upbeta}-\pmb{\hat{\upbeta}})
+	 \end{eqnarray*}
+	 The last two terms of the above equation can be written as	 
+	 \begin{eqnarray*}
+            -(\pmb{\upbeta}-\pmb{\hat{\upbeta}})^{T}(\mathbf{X}^{T}\mathbf{y}-\mathbf{X}^{T}\mathbf{X}\pmb{\hat{\upbeta}})
+	    &-&[\mathbf{X}^{T}(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})]^{T}(\pmb{\upbeta}-\pmb{\hat{\upbeta}})
+            =\mathbf{0}\\
+            (\because \mathbf{X}^{T}\mathbf{X}\pmb{\hat{\upbeta}}= \mathbf{X}^{T}\mathbf{y})
+         \end{eqnarray*}
+	$$
+	\therefore (\mathbf{y}-\mathbf{X}\pmb{\upbeta})^{T}(\mathbf{y}-\mathbf{X}\pmb{\upbeta})=
+  (\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})^{T}(\mathbf{y}-\mathbf{X}\pmb{\hat{\upbeta}})+
+  (\pmb{\hat{\upbeta}}-\pmb{\upbeta})^{T}\mathbf{X}^{T}\mathbf{X}(\pmb{\hat{\upbeta}}-\pmb{\upbeta})
+        $$
+  \end{enumerate}
+  \item[7.51] Show that $\mathbf{X}_{2\cdot 1}=\mathbf{X}_{2}-\mathbf{\hat{X}}_{2}(\mathbf{X}_{1})$ is 
+  orthogonal to $\mathbf{X}_{1}$, that is, $\mathbf{X}^{T}_{1}\mathbf{X}_{2\cdot 1}=\mathbf{O}$, as in (7.98).
+  	\begin{enumerate}
+  	  \item[Sol.] Using $\mathbf{X}_{2\cdot
+  	  1}=\mathbf{X}_{2}-\mathbf{X}_{1}\mathbf{A}$
+  	  where
+  	  $\mathbf{A}=(\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{X}_{2}$,
+  	  \begin{eqnarray*}
+  	   \mathbf{X}_{1}^{T}\mathbf{X}_{2\cdot 1}&=&\mathbf{X}_{1}^{T}
+  	   [\mathbf{X}_{2}-\mathbf{X}_{1}(\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{X}_{2}]\\
+  	   &=&
+  	   \mathbf{X}_{1}^{T}\mathbf{X}_{2}-(\mathbf{X}_{1}^{T}\mathbf{X}_{1})
+  	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{X}_{2}\\
+  	   &=&
+  	   \mathbf{X}_{1}^{T}\mathbf{X}_{2}-\mathbf{X}_{1}^{T}\mathbf{X}_{2}\\
+  	   &=&
+  	   \mathbf{O}\\  	   
+  	   &\therefore& \mathbf{X}_{2\cdot 1} \perp \mathbf{X}_{1} 
+  	  \end{eqnarray*}  	    	  
+  	  \end{enumerate}
+  \item[7.52] Show that $\pmb{\hat{\upbeta}}_{2}$ in (7.101) is the same as in the full fitted model
+  $\mathbf{\hat{y}}=\mathbf{X}_{1}\pmb{\hat{\upbeta}}_{1}+\mathbf{X}_{2}\pmb{\hat{\upbeta}}_{2}$.
+  	\begin{enumerate}
+  	  \item[Sol.] Let $\mathbf{X}=[\mathbf{X}_{1}~\mathbf{X}_{2}]$ and
+  	  $\hat{\pmb{\upbeta}}=[\hat{\pmb{\upbeta}}_{1}~\hat{\pmb{\upbeta}}_{2}]$,
+  	  then normal equation 
+ 	  $\mathbf{X}^{T}\mathbf{X}\hat{\pmb{\upbeta}}=\mathbf{X}^{T}\mathbf{y}$ is
+ 	  expressed as 
+ 	  \begin{eqnarray*}
+ 	  	\begin{pmatrix}[r]
+ 	  	 \mathbf{X}_{1}^{T} \\
+ 	  	 \mathbf{X}_{2}^{T}
+ 	  	\end{pmatrix}
+ 	  	\begin{pmatrix}[r]
+ 	  	 \mathbf{X}_{1} & \mathbf{X}_{2} 
+ 	  	\end{pmatrix}
+ 	  	\begin{pmatrix}[r]
+ 	  	 \hat{\pmb{\upbeta}}_{1} \\
+ 	  	 \hat{\pmb{\upbeta}}_{2}
+ 	  	\end{pmatrix}
+ 	  	&=&
+ 	  	\begin{pmatrix}[r]
+  	  	 \mathbf{X}_{1}^{T} \\
+ 	  	 \mathbf{X}_{2}^{T}	  	 
+ 	  	\end{pmatrix}\mathbf{y}\\
+ 	  	\begin{pmatrix}[r]
+ 	  	 \mathbf{X}_{1}^{T}\mathbf{X}_{1} & \mathbf{X}_{1}^{T}\mathbf{X}_{2} \\
+ 	  	 \mathbf{X}_{2}^{T}\mathbf{X}_{1} & \mathbf{X}_{2}^{T}\mathbf{X}_{2}
+ 	  	\end{pmatrix}
+ 	  	\begin{pmatrix}[r]
+ 	  	 \hat{\pmb{\upbeta}}_{1} \\
+ 	  	 \hat{\pmb{\upbeta}}_{2}
+ 	  	\end{pmatrix} 	  	
+ 	  	&=&
+ 	  	\begin{pmatrix}[r]
+ 	  	 \mathbf{X}_{1}^{T}\mathbf{y} \\
+ 	  	 \mathbf{X}_{2}^{T}\mathbf{y}
+ 	  	\end{pmatrix}
+ 	  \end{eqnarray*}
+ 	   The above matrix becomes 	  
+ 	  \begin{eqnarray}
+ 	  	\mathbf{X}_{1}^{T}\mathbf{X}_{1}\hat{\pmb{\upbeta}}_{1}
+ 	  	+\mathbf{X}_{1}^{T}\mathbf{X}_{2}\hat{\pmb{\upbeta}}_{2}&=&
+ 	  	\mathbf{X}_{1}^{T}\mathbf{y}\\
+ 	  	\mathbf{X}_{2}^{T}\mathbf{X}_{1}\hat{\pmb{\upbeta}}_{1}
+ 	  	+\mathbf{X}_{2}^{T}\mathbf{X}_{2}\hat{\pmb{\upbeta}}_{2}&=&
+ 	  	\mathbf{X}_{2}^{T}\mathbf{y}
+ 	  \end{eqnarray}
+ 	  From (1), 
+ 	  \begin{eqnarray}
+ 	   \hat{\pmb{\upbeta}}_{1}&=&
+ 	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}
+ 	   [\mathbf{X}_{1}^{T}\mathbf{y}-\mathbf{X}_{1}^{T}\mathbf{X}_{2}\hat{\pmb{\upbeta}}_{2}] 	   
+ 	  \end{eqnarray}
+ 	  and subsititute (3) into (2),
+ 	  \begin{eqnarray}
+ 	   \mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot 1}\hat{\pmb{\upbeta}}_{2}&=&
+ 	   \mathbf{X}_{2}^{T}\mathbf{y}-\mathbf{X}_{2}^{T}\mathbf{X}_{1}
+ 	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{y}
+ 	  \end{eqnarray}
+ 	  where $\mathbf{X}_{2\cdot
+ 	  1}=\mathbf{X}_{2}-\mathbf{X}_{1}\mathbf{A},~\mathbf{A}=
+ 	  (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{X}_{2}$.
+ 	  Multiplying $\mathbf{X}_{2}^{T}$ to (7.101),  
+ 	  \begin{eqnarray}
+ 	   	\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot 1}\hat{\pmb{\upbeta}}_{2}&=&
+ 	   	\mathbf{X}_{2}^{T}[\hat{\mathbf{y}}(\mathbf{X}_{1},~\mathbf{X}_{2})-\hat{\mathbf{y}}(\mathbf{X}_{1})]
+ 	  \end{eqnarray} 	  
+ 	  where $\hat{\mathbf{y}}(\mathbf{X}_{1},~\mathbf{X}_{2})=\hat{\mathbf{y}} $
+ 	  and
+ 	  $\hat{\mathbf{y}}(\mathbf{X}_{1})=\mathbf{X}_{1}\hat{\pmb{\upbeta}}_{1}
+ 	  +\mathbf{X}_{1}\mathbf{A}\hat{\pmb{\upbeta}}_{2}
+ 	  $. To verify that (4) is equal to (5),  	  
+ 	  \begin{eqnarray*}
+ 	   	\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot 1}\hat{\pmb{\upbeta}}_{2}&=&
+ 	   	\mathbf{X}_{2}^{T}[\mathbf{X}_{2}\hat{\pmb{\upbeta}}_{2}-\mathbf{X}_{1}\mathbf{A}\hat{\pmb{\upbeta}}_{2}]\\
+ 	   	&=&
+ 	   	\mathbf{X}_{2}^{T}[\mathbf{X}_{2}(\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot
+ 	   	1})^{-1}\mathbf{X}_{2}^{T}\mathbf{y}-\mathbf{X}_{2}(\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot
+ 	   	1})^{-1}\mathbf{X}_{1}
+ 	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{y}-\mathbf{X}_{1}\mathbf{A}\hat{\pmb{\upbeta}}_{2}]
+ 	  \end{eqnarray*}
+ 	  Since $(\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot
+ 	  1}+\mathbf{X}_{2}^{T}\mathbf{X}_{1}\mathbf{A})\hat{\pmb{\upbeta}}_{2}=\mathbf{X}_{2}^{T}\mathbf{X}_{2}
+ 	  \hat{\pmb{\upbeta}}_{2}$, 
+ 	  \begin{eqnarray*}
+ 	   \mathbf{X}_{2}^{T}\mathbf{X}_{2}\hat{\pmb{\upbeta}}_{2}&=&
+ 	   \mathbf{X}_{2}^{T}\mathbf{X}_{2}(\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot
+ 	   	1})^{-1}[\mathbf{X}_{2}^{T}\mathbf{y}-\mathbf{X}_{2}^{T}\mathbf{X}_{1}
+ 	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{y}]\\
+ 	  \hat{\pmb{\upbeta}}_{2}&=&(\mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot
+ 	   	1})^{-1}[\mathbf{X}_{2}^{T}\mathbf{y}-\mathbf{X}_{2}^{T}\mathbf{X}_{1}
+ 	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{y}]\\
+ 	   \mathbf{X}_{2}^{T}\mathbf{X}_{2\cdot 1}\hat{\pmb{\upbeta}}_{2}&=&
+ 	   \mathbf{X}_{2}^{T}\mathbf{y}-\mathbf{X}_{2}^{T}\mathbf{X}_{1}
+ 	   (\mathbf{X}_{1}^{T}\mathbf{X}_{1})^{-1}\mathbf{X}_{1}^{T}\mathbf{y} 	   	   
+ 	  \end{eqnarray*}
+ 	  Which is the same as (4). Therefore, $\hat{\pmb{\upbeta}}_{2}$ is the same
+ 	  as $\hat{\pmb{\upbeta}}_{2}$ in the full fitted model. 	  
+  	\end{enumerate}   	 
+  \item[7.53] When gasoline is pumped into the tank of a car, vapors are vented into the atmosphere. 
+  An experiment was conducted to determine whether $y$, the amount of vapor, can be predicted using 
+  the following four variables based on initial conditions of the tank and the dispensed gasoline:
+  \begin{eqnarray*}
+	x_{1}&=&\mathrm{tank~temperature}~~~(^{\circ}\mathrm{F}),\\
+        x_{2}&=&\mathrm{gasoline~temperature}~~~(^{\circ}\mathrm{F}),\\
+        x_{3}&=&\mathrm{vapor~pressure~in~tank}~~~(\mathrm{psi}),\\
+        x_{4}&=&\mathrm{vapor~pressure~of~gasoline}~~~(\mathrm{psi}).
+  \end{eqnarray*}
+	\begin{enumerate}
+	   \item[(a)] Find $\pmb{\hat{\upbeta}}$ and $s^{2}$.
+	   \item[(b)] Find an estimate of $\mathrm{cov}(\pmb{\hat{\upbeta}})$
+	   \item[(c)] Find $\pmb{\hat{\upbeta}}_{1}$ and $\hat{\beta}_{0}$ using 
+           $\mathbf{S}_{xx}$ and $\mathbf{S}_{yx}$ as in (7.47) and (7.48).
+	   \item[(d)] Find $R^{2}$ and $R^{2}_{a}$.
+	\end{enumerate}
+\end{enumerate}
+\end{document}
+

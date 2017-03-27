@@ -1,0 +1,130 @@
+# TODO: Add comment
+# 
+# Author: Administrator
+###############################################################################
+#library(Rcmdr)
+library(reporttools)
+#library(Amelia)
+#library(mitools)
+#library(MissingDataGUI)
+#library(Matching)
+#library(mice)
+library(gdata)
+library(xtable)
+library(reporttools)
+###############################################################################
+normalizePath(file.path(R.home(), "bin", "Rcmd.exe"))
+
+source('C:/Workspace/RWorkspace/PSM_omcTY/cd.R')
+cd("..")
+cd("Boncho Ku")
+cd("LinearModel_HW")
+cd("20120326_HW#1")
+
+Data<-read.xls("data_hw3.xlsx",perl="C:\\Perl64\\bin\\perl.exe")
+attach(Data)
+
+model<-y~x1+x2+x3+x4
+utils::str(m<-model.frame(model,Data))
+
+X<-model.matrix(model,m)
+size<-dim(X)
+n<-size[1]
+k<-size[2]-1
+beta<-solve(t(X)%*%X)%*%t(X)%*%y 
+sigma.hat<-(n-k-1)^(-1)*t(y-X%*%beta)%*%(y-X%*%beta)
+print(beta)
+print(sigma.hat)
+
+XX.inv<-solve(t(X)%*%X)
+cov.beta<-as.numeric(sigma.hat)*XX.inv
+print(cov.beta)
+
+I.<-diag(rep(1,n))
+J<-matrix(1,n,n)
+X.c<-(I.-n^(-1)*J)%*%X[,2:(k+1)]
+S.xx<-t(X.c)%*%X.c/(n-1)
+s.yx<-t(X.c)%*%y/(n-1)
+beta.1<-solve(S.xx)%*%s.yx
+
+barx<-apply(X[,2:(k+1)],2,mean)
+beta.0<-mean(y)-t(beta.1)%*%barx
+
+SSE<-t(y-X%*%beta)%*%(y-X%*%beta)
+SST<-t(y)%*%y-size[1]*mean(y)^2
+SSR<-SST-SSE
+
+R.sq<-SSR/SST #R square
+R.sq.adj<-((n-1)*R.sq-k)/(n-k-1) 
+detach(Data)
+lm1<-lm(y~x1+x2+x3+x4,data=Data)
+
+Fval<-(SSR/k)/(SSE/(n-k-1))
+tmp<-anova(lm1)
+overall<-matrix(0,3,5)
+overall[,1]<-c(4,27,31)
+overall[,2]<-c(sum(tmp[1:4,2]),tmp[5,2],sum(tmp[,2]))
+overall[,3]<-c(sum(tmp[1:4,2])/4,tmp[5,2]/27,NA)
+overall[,4]<-c(Fval,NA,NA)
+overall[,5]<-c(1-pf(Fval,k,n-k-1),NA,NA)
+overall<-as.data.frame(overall)
+row.names(overall)<-c("Beta","Residual","Total")
+names(overall)<-names(tmp)
+
+h<-2
+lm2<-lm(y~x2+x4,data=Data)
+SSR.all<-overall[1,2]
+SSR.star<-sum(anova(lm2)[1:2,2])
+Fval.sub<-((SSR.all-SSR.star)/h)/(SSE/(n-k-1))
+
+library(car)
+C<-matrix(c(0,0,0,1,0,0,-1,1,0,0,-12,1,0,0,-1),3,5)
+linearHypothesis(lm1,C,c(0,0,0))
+
+conf.b.tbl<-matrix(0,4,4)
+for (i in 1:4) {
+	tmp1<-confint(lm1,parm=names(Data)[i+1], level=0.95)
+	tmp2<-confint(lm1,parm=names(Data)[i+1], level=1-0.05/4)
+	conf.b.tbl[i,1:2]<-tmp1
+	conf.b.tbl[i,3:4]<-tmp2
+	
+}
+conf.b.tbl<-as.data.frame(conf.b.tbl)
+row.names(conf.b.tbl)<-c("x1","x2","x3","x4")
+tmp1<-as.data.frame(tmp1)
+tmp2<-as.data.frame(tmp2)
+
+names(conf.b.tbl)[1:2]<-names(tmp1)
+names(conf.b.tbl)[3:4]<-names(tmp2)
+
+#predicted value
+y.hat<-predict(lm1,type="response")
+#residuals
+e<-lm1$residuals
+#calculate hat matrix
+H=X%*%solve((t(X)%*%X))%*%t(X)
+h.diag<-diag(H)
+#studentized residual
+std.res<-residuals(lm1)/(summary(lm1)$sigma*sqrt(1-h.diag))
+#studentized deleted residuals
+std.d.res<-studres(lm1)
+#Cook's distance
+cooksd<-cooks.distance(lm1)
+press<-sum(e^2/(1-h.diag))
+infl.tbl<-data.frame(y.hat,e,h.diag,std.res,std.d.res,cooksd)
+
+xtable(infl.tbl,digit=3)
+
+cutoff<-qf(0.5,k+1,n-k-1)
+par(mfrow=c(2,1))
+plot(lm1, which=4, cook.levels=cutoff)
+influencePlot(lm1,id.method="identify",ylim=c(-3,3),id.col="red",
+		main="Influence Plot")
+
+################################################################3
+dat2<-read.xls("data_hw5.xlsx",sheet=1, perl="C:\\Perl64\\bin\\perl.exe")
+attach(dat2)
+cont.mat <- matrix(c(2,2,2,-3,-3,1,1,-2,0,0,1,-1,0,0,0,0,0,0,1,-1),5,4)
+mod1 <- aov(BldSL~Breed,data=dat2)
+contrasts(dat2$Breed)<-cont.mat
+tbl <- summary(mod1,split=list(Breed=list("A,B,C vs. D,E"=1,"A,B vs. C"=2,"A vs. B"=3,"D vs. E"=4)))
